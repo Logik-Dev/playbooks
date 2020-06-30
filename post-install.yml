@@ -93,3 +93,9 @@
       systemd:
         state: reloaded
         name: sshd
+
+    - name: Change permissions to /srv
+      file:
+        path: /srv
+        state: directory
+        mode: g+s

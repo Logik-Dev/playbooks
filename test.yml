@@ -1,9 +1,0 @@
-- hosts: all
-  vars_files:
-    - vault.yml
-  vars:
-    ansible_user: root
-    ansible_password: "{{ vars[inventory_hostname].root.password }}"
-  tasks:
-    - debug:
-       msg: "{{ vars[inventory_hostname].root.password }}"
