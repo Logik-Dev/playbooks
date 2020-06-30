@@ -17,6 +17,8 @@
         - ca-certificates
         - gnupg-agent
         - software-properties-common
+        - ansible
+        - python-dockerpty
 
     - name: Add gpg docker keys
       apt_key:
