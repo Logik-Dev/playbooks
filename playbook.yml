@@ -1,8 +1,8 @@
 - hosts: all
   gather_facts: no
   vars_files:
-    - ../credentials.yml
-    - ../urls.yml
+    - credentials.yml
+    - urls.yml
   remote_user: root
   vars:
     - ansible_ssh_pass: "{{ vars[inventory_hostname].root.password }}"
