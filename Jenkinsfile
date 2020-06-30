@@ -6,7 +6,7 @@ node {
 	ansiblePlaybook(
             colorized: true,
             inventory: 'hosts.yml',
-            playbook: 'prepare/known_hosts.yml'
+            playbook: 'known_hosts.yml'
 	)
     }
     stage('Install') {
@@ -17,7 +17,7 @@ node {
                 credentialsId: 'SSH', 
                 extras: "--extra-vars='public_key=$PUBLIC_KEY'", 
                 inventory: 'hosts.yml', 
-                playbook: 'prepare/playbook.yml', 
+                playbook: 'playbook.yml', 
                 vaultCredentialsId: 'VAULT',
             )
         }
