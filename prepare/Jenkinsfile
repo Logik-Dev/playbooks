@@ -11,7 +11,8 @@ node {
                 extras: "--extra-vars='public_key=$PUBLIC_KEY'", 
                 inventory: 'hosts.yml', 
                 playbook: 'prepare/playbook.yml', 
-                vaultCredentialsId: 'VAULT'
+                vaultCredentialsId: 'VAULT',
+                disableHostKeyChecking: true
             )
         }
     }
