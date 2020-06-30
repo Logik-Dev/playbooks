@@ -8,7 +8,7 @@ node {
                 become: true, 
                 colorized: true, 
                 credentialsId: 'SSH', 
-                extras: "--extra-vars='public_key=/var/lib/jenkins/.ssh/id_rsa.pub'", 
+                extras: "--extra-vars='public_key=$PUBLIC_KEY'", 
                 inventory: 'hosts.yml', 
                 playbook: 'prepare/playbook.yml', 
                 vaultCredentialsId: 'VAULT'
