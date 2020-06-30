@@ -3,11 +3,14 @@ node {
         checkout scm
     }
     stage('Run'){
-	ansiblePlaybook(
+	sshagent(['SSH']) {
+	  ansiblePlaybook(
+            credentialsId: 'SSH',
             colorized: true,
             inventory: 'hosts.yml',
             playbook: 'playbook.yml',
 	    vaultCredentialsId: 'VAULT'
 	)
-    } 
+    }
+  }
 }
