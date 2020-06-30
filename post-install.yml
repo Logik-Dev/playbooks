@@ -77,7 +77,6 @@
         state: present
         groups: sudo, docker
         append: yes
-        password: "{{ vars[inventory_hostname].user.password }}"
 
     - name: Set Authorized keys for ansible user
       authorized_key:
