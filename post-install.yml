@@ -1,0 +1,95 @@
+- hosts: all
+  gather_facts: no
+  vars_files:
+    - credentials.yml
+    - urls.yml
+  remote_user: root
+  vars:
+    - ansible_ssh_pass: "{{ vars[inventory_hostname].root.password }}"
+  tasks:
+    - name: Install sudo, curl, vim and other tools
+      apt:
+        pkg:
+        - sudo
+        - curl
+        - vim
+        - apt-transport-https
+        - ca-certificates
+        - gnupg-agent
+        - software-properties-common
+
+    - name: Add gpg docker keys
+      apt_key:
+        keyserver: "{{ docker_keyserver }}"
+        id: "{{ docker_gpg_id }}"
+    
+    - name: Work out the distribution
+      command: lsb_release -cs
+      register: dist
+
+    - apt_repository:
+        repo: "deb [arch=amd64] {{ docker_apt }} {{ dist.stdout }}  stable"
+        state: present   
+    
+    - name: Install docker
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+    - name: Enable and start docker service
+      systemd:
+        state: started
+        enabled: yes
+        name: docker
+        
+    - name: Get OS
+      command: uname -s
+      register: os
+    
+    - name: Get Arch
+      command: uname -m
+      register: arch
+    
+    - name: Download docker-compose
+      get_url: 
+        url: "{{ docker_compose }}-{{ os.stdout }}-{{ arch.stdout }}"
+        dest: /usr/local/bin/docker-compose
+
+    - name: Make compose executable
+      file:
+        dest: /usr/local/bin/docker-compose
+        mode: a+x
+
+    - name: Link compose
+      file:
+        src: /usr/local/bin/docker-compose
+        dest: /usr/bin/docker-compose
+        state: link
+
+    - name: Add Ansible User
+      user:
+        name: "{{ vars[inventory_hostname].user.name }}"
+        shell: /bin/bash
+        state: present
+        groups: sudo, docker
+        append: yes
+        password: "{{ vars[inventory_hostname].user.password }}"
+
+    - name: Set Authorized keys for ansible user
+      authorized_key:
+        user: ansible
+        state: present
+        key: "{{ lookup('file', public_key) }}"
+
+    - name: Remove root login via ssh
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+
+    - name: Reload SSH
+      systemd:
+        state: reloaded
+        name: sshd

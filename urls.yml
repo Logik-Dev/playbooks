@@ -1,0 +1,5 @@
+docker_keyserver: https://download.docker.com/linux/debian/gpg
+docker_gpg_id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+docker_apt: https://download.docker.com/linux/debian
+docker_compose: https://github.com/docker/compose/releases/download/1.26.0/docker-compose
+
