@@ -2,7 +2,14 @@ node {
     stage('Clone') {
         checkout scm
     }
-    stage('Run') {
+    stage('Update Known Hosts'){
+	ansiblePlaybook(
+            colorized: true,
+            inventory: 'hosts.yml',
+            playbook: 'prepare/known_hosts.yml'
+	)
+    }
+    stage('Install') {
         sshagent(['SSH']) {
             ansiblePlaybook (
                 become: true, 
@@ -12,7 +19,6 @@ node {
                 inventory: 'hosts.yml', 
                 playbook: 'prepare/playbook.yml', 
                 vaultCredentialsId: 'VAULT',
-                disableHostKeyChecking: true
             )
         }
     }
