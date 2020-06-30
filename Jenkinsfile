@@ -6,7 +6,8 @@ node {
 	ansiblePlaybook(
             colorized: true,
             inventory: 'hosts.yml',
-            playbook: 'playbook.yml'
+            playbook: 'playbook.yml',
+	    vaultCredentialsId: 'VAULT'
 	)
     } 
 }
