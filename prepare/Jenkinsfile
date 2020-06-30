@@ -1,0 +1,18 @@
+node {
+    stage('Clone') {
+        checkout scm
+    }
+    stage('Run') {
+        sshagent(['SSH']) {
+            ansiblePlaybook (
+                become: true, 
+                colorized: true, 
+                credentialsId: 'SSH', 
+                extras: "--extra-vars='public_key=/var/lib/jenkins/.ssh/id_rsa.pub'", 
+                inventory: 'hosts.yml', 
+                playbook: 'prepare/playbook.yml', 
+                vaultCredentialsId: 'VAULT'
+            )
+        }
+    }
+}
